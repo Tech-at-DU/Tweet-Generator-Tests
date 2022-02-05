@@ -1,13 +1,20 @@
 # -*- coding: utf-8 -*-
-
+import json
 import unittest
 import random
 from gradescope_utils.autograder_utils.decorators import leaderboard
 
 
 class TestLeaderboard(unittest.TestCase):
+    results = None
+
     def setUp(self):
-        pass
+        try:
+            with open('/autograder/results/results.json') as json_file:
+                self.results = json.load(json_file)
+                print(self.results)
+        except:
+            print("Could not load results.json file.")
 
     @leaderboard("high score")
     def test_leaderboard(self, set_leaderboard_value=None):
@@ -25,6 +32,6 @@ class TestLeaderboard(unittest.TestCase):
         set_leaderboard_value("🌟" * random.randint(0, 10))
 
     @leaderboard("time", "asc")
-    def test_another(self, set_leaderboard_value=None):
+    def test_time_executed(self, set_leaderboard_value=None):
         """Sets a leaderboard value that's sorted ascending (lower is better)"""
         set_leaderboard_value(round(random.gauss(7, 3), 2))
